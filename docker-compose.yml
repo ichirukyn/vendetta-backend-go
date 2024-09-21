@@ -1,0 +1,81 @@
+version: '3.1'
+services:
+#  backend:
+#    container_name: vendetta-backend
+#    build: ./
+#    env_file:
+#      - .env.docker
+#    ports:
+#      - "5002:5002"
+#      - "5003:5003"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: vendetta-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  prometheus:
+    container_name: vendetta-prometheus
+    image: prom/prometheus
+    restart: always
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    container_name: vendetta-grafana
+    image: grafana/grafana
+    ports:
+      - "8083:3000"
+    volumes:
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./docker/grafana/fetch_dashboard.sh:/usr/share/grafana/fetch_dashboard.sh
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        /usr/share/grafana/fetch_dashboard.sh 
+        /run.sh
+
+  postgres:
+    container_name: vendetta-postgres
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "vendetta"
+    volumes:
+      - postgresDB:/var/lib/postgresql/data/
+
+  adminer:
+    container_name: vendetta-adminer
+    image: adminer
+    depends_on:
+      - postgres
+    restart: always
+    ports:
+      - "7000:8080"
+
+volumes:
+  redisDB:
+  postgresDB:
+  grafana_storage: {}
