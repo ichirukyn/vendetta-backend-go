@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	_ "vendetta/docs"
 	"vendetta/internal/adapters/store/sql"
 	"vendetta/internal/app"
 	"vendetta/internal/app/config"

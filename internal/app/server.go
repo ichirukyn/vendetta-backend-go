@@ -61,9 +61,9 @@ func (s *Server) configureRouter() {
 
 	s.ar.Handle("GET", "/", HealthCheckHandler)
 
-	s.ar.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	s.configureUserRouter()
+	s.ar.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 func (s *Server) configureUserRouter() {

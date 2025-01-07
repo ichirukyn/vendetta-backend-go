@@ -1,0 +1,335 @@
+definitions:
+  dto.CreateClassDTO:
+    properties:
+      desc:
+        type: string
+      desc_short:
+        type: string
+      hidden:
+        type: boolean
+      id:
+        type: string
+      main_attr:
+        type: string
+      name:
+        type: string
+      race_id:
+        type: string
+      tag_id:
+        type: integer
+      type:
+        type: string
+    type: object
+  dto.CreateUserDTO:
+    properties:
+      chat_id:
+        type: string
+      login:
+        type: string
+      role:
+        type: string
+    type: object
+  dto.UpdateClassDTO:
+    properties:
+      desc:
+        type: string
+      desc_short:
+        type: string
+      hidden:
+        type: boolean
+      id:
+        type: string
+      main_attr:
+        type: string
+      name:
+        type: string
+      race_id:
+        type: string
+      tag_id:
+        type: integer
+      type:
+        type: string
+    type: object
+  dto.UpdateUserDTO:
+    properties:
+      chat_id:
+        type: string
+      login:
+        type: string
+      role:
+        type: string
+    type: object
+  entities.Class:
+    properties:
+      desc:
+        type: string
+      desc_short:
+        type: string
+      hidden:
+        type: boolean
+      id:
+        type: string
+      main_attr:
+        type: string
+      name:
+        type: string
+      race:
+        $ref: '#/definitions/entities.Race'
+      race_id:
+        type: string
+      tag:
+        $ref: '#/definitions/entities.Tag'
+      tag_id:
+        type: integer
+      type:
+        type: string
+    type: object
+  entities.ClassEffect:
+    properties:
+      attribute:
+        type: string
+      class_id:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+    type: object
+  entities.Race:
+    properties:
+      desc:
+        type: string
+      desc_short:
+        type: string
+      effects:
+        $ref: '#/definitions/entities.RaceEffect'
+      hidden:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+      tag:
+        $ref: '#/definitions/entities.Tag'
+      tag_id:
+        type: integer
+    type: object
+  entities.RaceEffect:
+    properties:
+      attribute:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      race_id:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+    type: object
+  entities.Tag:
+    properties:
+      accuracy:
+        type: integer
+      desc:
+        type: string
+      dexterity:
+        type: integer
+      health:
+        type: integer
+      id:
+        type: string
+      intelligence:
+        type: integer
+      name:
+        type: string
+      priority:
+        type: integer
+      soul:
+        type: integer
+      speed:
+        type: integer
+      strength:
+        type: integer
+      submission:
+        type: integer
+    type: object
+  entities.User:
+    properties:
+      chat_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /classes:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/entities.Class'
+              type: array
+            type: array
+      tags:
+      - classes
+    post:
+      parameters:
+      - description: field
+        in: body
+        name: classes
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateClassDTO'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Class'
+            type: array
+      tags:
+      - classes
+  /classes/:id:
+    delete:
+      responses:
+        "200":
+          description: OK
+      tags:
+      - classes
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Class'
+            type: array
+      tags:
+      - classes
+    put:
+      parameters:
+      - description: field
+        in: body
+        name: classes
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateClassDTO'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Class'
+            type: array
+      tags:
+      - classes
+  /classes/:id/effects:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.ClassEffect'
+            type: array
+      tags:
+      - classes
+  /classes/effects:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/entities.ClassEffect'
+              type: array
+            type: array
+      tags:
+      - classes
+  /users:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/entities.User'
+              type: array
+            type: array
+      tags:
+      - user
+    post:
+      parameters:
+      - description: field
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserDTO'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+      tags:
+      - user
+  /users/:id:
+    delete:
+      responses:
+        "200":
+          description: OK
+      tags:
+      - user
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+      tags:
+      - user
+    put:
+      parameters:
+      - description: field
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserDTO'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+      tags:
+      - user
+swagger: "2.0"

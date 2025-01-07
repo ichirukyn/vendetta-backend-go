@@ -16,4 +16,4 @@ create_migration:
 
 .PHONY: upload_migraion
 upload_migration:
-	migrate -path migrations -database "postgres://root:password@localhost:5432/vendetta?sslmode=disable" up
+	migrate -path migrations -database "postgres://vendetta:vendetta@localhost:5432/vendetta_go?sslmode=disable" up
