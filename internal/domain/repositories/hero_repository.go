@@ -5,26 +5,12 @@ import (
 )
 
 type HeroRepository interface {
-	Create(*entities.Hero) error
+	Create(*entities.Hero) (*entities.Hero, error)
 	GetAll(*entities.Filter, *entities.WhereQueryFilter) ([]*entities.Hero, error)
 	GetByID(string) (*entities.Hero, error)
 	GetByUserID(string) ([]*entities.Hero, error)
 	Update(*entities.Hero) error
 	Delete(*entities.Hero) error
-}
-
-type HeroSpellRepository interface {
-	Create(*entities.HeroSpell) error
-	GetAllByHeroID(string, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroSpell, error)
-	GetBySpellID(string) ([]*entities.HeroSpell, error)
-	Update(*entities.HeroSpell) error
-	Delete(*entities.HeroSpell) error
-}
-
-type HeroStatisticsRepository interface {
-	Create(*entities.HeroStatistics) error
-	GetByHeroID(string) (*entities.HeroStatistics, error)
-	Update(*entities.HeroStatistics) error
 }
 
 type HeroSpecRepository interface {
@@ -34,20 +20,27 @@ type HeroSpecRepository interface {
 	Delete(*entities.HeroSpec) error
 }
 
+type HeroSkillRepository interface {
+	Create(*entities.HeroSkill) error
+	GetAllByHeroID(string, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroSkill, error)
+	GetBySpellID(string) ([]*entities.HeroSkill, error)
+	Update(*entities.HeroSkill) error
+	Delete(*entities.HeroSkill) error
+}
+
+// PAUSE
+type HeroStatisticsRepository interface {
+	Create(*entities.HeroStatistics) error
+	GetByHeroID(string) (*entities.HeroStatistics, error)
+	Update(*entities.HeroStatistics) error
+}
+
 type HeroTeamRepository interface {
 	Create(*entities.HeroTeam) error
 	GetByHeroID(string) (*entities.HeroTeam, error)
 	GetByTeamID(string) (*entities.HeroTeam, error)
 	Update(*entities.HeroTeam) error
 	Delete(*entities.HeroTeam) error
-}
-
-type HeroTechniqueRepository interface {
-	Create(*entities.HeroTechnique) error
-	GetAllByHeroID(string, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroTechnique, error)
-	GetByTechniqueID(string) (*entities.HeroTechnique, error)
-	Update(*entities.HeroTechnique) error
-	Delete(*entities.HeroTechnique) error
 }
 
 type HeroWeaponRepository interface {

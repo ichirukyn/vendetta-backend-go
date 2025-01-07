@@ -1,69 +1,87 @@
 package repositories
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"errors"
+	"gorm.io/gorm"
+	"vendetta/internal/domain/constants"
 	"vendetta/internal/domain/entities"
+	"vendetta/internal/domain/store"
+	"vendetta/internal/services/postgres"
 )
 
-type HeroRepository interface {
-	Create(*entities.Hero) error
-	GetAll(*entities.Filter, *entities.WhereQueryFilter) ([]*entities.Hero, error)
-	GetByID(primitive.ObjectID) (*entities.Hero, error)
-	GetByUserID(primitive.ObjectID) ([]*entities.Hero, error)
-	Update(*entities.Hero) error
-	Delete(*entities.Hero) error
+type HeroRepository struct {
+	DB *postgres.Database
 }
 
-type HeroSpellRepository interface {
-	Create(*entities.HeroSpell) error
-	GetAllByHeroID(primitive.ObjectID, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroSpell, error)
-	GetBySpellID(primitive.ObjectID) ([]*entities.HeroSpell, error)
-	Update(*entities.HeroSpell) error
-	Delete(*entities.HeroSpell) error
+func (r *HeroRepository) Create(hero *entities.Hero) (*entities.Hero, error) {
+	h := &entities.Hero{}
+
+	result := r.DB.Table(constants.DatabaseHeroes).Create(&hero).Scan(&h)
+
+	if result.Error != nil {
+		return nil, store.ErrRecordNotCreated
+	}
+
+	return h, result.Error
 }
 
-type HeroStatisticsRepository interface {
-	Create(*entities.HeroStatistics) error
-	GetByHeroID(primitive.ObjectID) (*entities.HeroStatistics, error)
-	Update(*entities.HeroStatistics) error
+func (r *HeroRepository) GetAll(filter *entities.Filter, query *entities.WhereQueryFilter) ([]*entities.Hero, error) {
+	var heroes []*entities.Hero
+
+	result := r.DB.
+		Table(constants.DatabaseHeroes).
+		Find(&heroes).
+		Offset(filter.Offset).
+		Limit(filter.Limit).
+		Order(filter.Order).
+		Where(*query).
+		Scan(&heroes)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, store.ErrRecordNotFound
+	}
+
+	return heroes, result.Error
 }
 
-type HeroSpecRepository interface {
-	Create(*entities.HeroSpec) error
-	GetByHeroID(primitive.ObjectID) (*entities.HeroSpec, error)
-	Update(*entities.HeroSpec) error
-	Delete(*entities.HeroSpec) error
+func (r *HeroRepository) GetByID(id string) (*entities.Hero, error) {
+	hero := &entities.Hero{}
+
+	result := r.DB.Table(constants.DatabaseHeroes).Where("id = ?", id).First(hero).Scan(&hero)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, store.ErrRecordNotFound
+	}
+
+	return hero, result.Error
 }
 
-type HeroTeamRepository interface {
-	Create(*entities.HeroTeam) error
-	GetByHeroID(primitive.ObjectID) (*entities.HeroTeam, error)
-	GetByTeamID(primitive.ObjectID) (*entities.HeroTeam, error)
-	Update(*entities.HeroTeam) error
-	Delete(*entities.HeroTeam) error
+func (r *HeroRepository) GetByUserID(userID string) ([]*entities.Hero, error) {
+	var heroes []*entities.Hero
+	result := r.DB.Table(constants.DatabaseHeroes).
+		Where("user_id = ?", userID).
+		Find(&heroes)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return nil, store.ErrRecordNotFound
+	}
+
+	return heroes, result.Error
 }
 
-type HeroTechniqueRepository interface {
-	Create(*entities.HeroTechnique) error
-	GetAllByHeroID(primitive.ObjectID, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroTechnique, error)
-	GetByTechniqueID(primitive.ObjectID) (*entities.HeroTechnique, error)
-	Update(*entities.HeroTechnique) error
-	Delete(*entities.HeroTechnique) error
+func (r *HeroRepository) Update(hero *entities.Hero) error {
+	result := r.DB.Table(constants.DatabaseHeroes).Save(&hero).Scan(&hero)
+	if result.Error != nil {
+		return store.ErrRecordNotUpdated
+	}
+
+	return nil
 }
 
-type HeroWeaponRepository interface {
-	Create(*entities.HeroWeapon) error
-	GetAllByHeroID(primitive.ObjectID, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroWeapon, error)
-	GetByWeaponID(primitive.ObjectID) (*entities.HeroWeapon, error)
-	Update(*entities.HeroWeapon) error
-	Delete(*entities.HeroWeapon) error
-}
+func (r *HeroRepository) Delete(hero *entities.Hero) error {
+	result := r.DB.Table(constants.DatabaseHeroes).Delete(&hero)
+	if result.Error != nil {
+		return store.ErrRecordNotDeleted
+	}
 
-type HeroStorageRepository interface {
-	Create(*entities.HeroStorage) error
-	GetAllByHeroID(primitive.ObjectID, *entities.Filter, *entities.WhereQueryFilter) ([]*entities.HeroStorage, error)
-	GetHeroInventory(primitive.ObjectID) (*entities.HeroStorage, error)
-	GetByStorageID(primitive.ObjectID) (*entities.HeroStorage, error)
-	Update(*entities.HeroStorage) error
-	Delete(*entities.HeroStorage) error
+	return nil
 }

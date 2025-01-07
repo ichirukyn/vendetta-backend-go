@@ -14,8 +14,6 @@ type UserRepository struct {
 }
 
 func (r *UserRepository) Create(user *entities.User) error {
-	user.GenerateID()
-
 	result := r.DB.Table(constants.DatabaseUsers).Create(&user).Scan(&user)
 	if result.Error != nil {
 		return store.ErrRecordNotCreated

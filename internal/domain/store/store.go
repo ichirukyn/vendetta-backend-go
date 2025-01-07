@@ -6,13 +6,12 @@ import (
 
 type Store interface {
 	Hero() repositories.HeroRepository
-	HeroSpell() repositories.HeroSpellRepository
+	HeroSkill() repositories.HeroSkillRepository
 	HeroSpec() repositories.HeroSpecRepository
 	HeroStatistics() repositories.HeroStatisticsRepository
 	HeroStorage() repositories.HeroStorageRepository
 	HeroTeam() repositories.HeroTeamRepository
 	HeroWeapon() repositories.HeroWeaponRepository
-	HeroTechnique() repositories.HeroTechniqueRepository
 
 	Storage() repositories.StorageRepository
 	StorageItem() repositories.StorageItemRepository
@@ -21,4 +20,11 @@ type Store interface {
 
 	User() repositories.UserRepository
 	Ban() repositories.BanRepository
+
+	Race() repositories.RaceRepository
+	RaceEffect() repositories.RaceEffectRepository
+	Class() repositories.ClassRepository
+	ClassEffect() repositories.ClassEffectRepository
+
+	Skill() repositories.SkillRepository
 }

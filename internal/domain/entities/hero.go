@@ -1,9 +1,8 @@
 package entities
 
 type Hero struct {
-	ID       string  `json:"id"`
+	ID       string  `json:"id" gorm:"primary_key;autoIncrement"`
 	UserID   string  `json:"user_id"`
-	ClanID   string  `json:"clan_id"`
 	RaceID   string  `json:"race_id"`
 	ClassID  string  `json:"class_id"`
 	Name     string  `json:"name"`
@@ -11,21 +10,40 @@ type Hero struct {
 	IsHidden bool    `json:"is_hidden"`
 	Level    int     `json:"level"`
 	Exp      float64 `json:"exp"`
+	//ClanID   string  `json:"clan_id"`
 
 	User User `json:"user,omitempty"`
 }
 
-// Update heroes set (exp) value(value)
+type HeroSpec struct {
+	ID             string  `json:"id"  gorm:"primary_key;autoIncrement"`
+	HeroID         string  `json:"hero_id"`
+	Accuracy       int     `json:"accuracy"`
+	Strength       int     `json:"strength"`
+	Health         int     `json:"health"`
+	Speed          int     `json:"speed"`
+	Dexterity      int     `json:"dexterity"`
+	Soul           int     `json:"soul"`
+	Intelligence   int     `json:"intelligence"`
+	Submissions    int     `json:"submissions"`
+	CriticalRate   float64 `json:"critical_rate"`
+	CriticalDamage float64 `json:"critical_damage"`
+	Resistance     float64 `json:"resistance"`
+	TotalSpec      int     `json:"total_spec"`
+	FreeSpec       int     `json:"free_spec"`
+}
 
-type HeroSpell struct {
-	ID      string `json:"id"`
-	HeroID  string `json:"hero_id"`
-	SpellID string `json:"spell_id"`
-	Level   int    `json:"level"`
+type HeroSkill struct {
+	ID      string  `json:"id"  gorm:"primary_key;autoIncrement"`
+	HeroID  string  `json:"hero_id"`
+	SpellID string  `json:"spell_id"`
+	Level   int     `json:"level"`
+	Exp     float64 `json:"exp"`
 
 	Hero Hero `json:"hero,omitempty"`
 }
 
+// PAUSE
 type HeroStatistics struct {
 	ID                  string `json:"id"`
 	HeroID              string `json:"hero_id"`
@@ -61,27 +79,7 @@ type HeroStatistics struct {
 	Hero Hero `json:"hero,omitempty"`
 }
 
-type HeroSpec struct {
-	ID             string  `json:"id"`
-	HeroID         string  `json:"hero_id"`
-	Accuracy       int     `json:"accuracy"`
-	Level          int     `json:"level"`
-	Strength       int     `json:"strength"`
-	Health         int     `json:"health"`
-	Speed          int     `json:"speed"`
-	Dexterity      int     `json:"dexterity"`
-	Soul           int     `json:"soul"`
-	Intelligence   int     `json:"intelligence"`
-	Submissions    int     `json:"submissions"`
-	CriticalRate   float64 `json:"critical_rate"`
-	CriticalDamage float64 `json:"critical_damage"`
-	Resistance     float64 `json:"resistance"`
-	TotalSpec      int     `json:"total_spec"`
-	FreeSpec       int     `json:"free_spec"`
-
-	Hero Hero `json:"hero,omitempty"`
-}
-
+// PAUSE
 type HeroTeam struct {
 	ID       string `json:"id"`
 	HeroID   string `json:"hero_id"`
@@ -92,15 +90,7 @@ type HeroTeam struct {
 	Hero Hero `json:"hero,omitempty"`
 }
 
-type HeroTechnique struct {
-	ID          string `json:"id"`
-	HeroID      string `json:"hero_id"`
-	TechniqueID string `json:"technique_id"`
-	Level       int    `json:"level"`
-
-	Hero Hero `json:"hero,omitempty"`
-}
-
+// PAUSE
 type HeroWeapon struct {
 	ID       string `json:"id"`
 	HeroID   string `json:"hero_id"`
@@ -110,6 +100,7 @@ type HeroWeapon struct {
 	Hero Hero `json:"hero,omitempty"`
 }
 
+// PAUSE
 type HeroStorage struct {
 	ID        string `json:"id"`
 	HeroID    string `json:"hero_id"`

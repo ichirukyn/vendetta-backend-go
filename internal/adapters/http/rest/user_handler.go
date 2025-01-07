@@ -14,7 +14,13 @@ type UserHandler struct {
 	UserService *usecases.UserService
 }
 
-// Create хэндлер для создания пользователя (entities.User)
+// Create
+//
+//	@Tags		user
+//	@Param		user	body	dto.CreateUserDTO	true	"field"
+//
+//	@Success	200		{array}	entities.User
+//	@Router		/users [post]
 func (h *UserHandler) Create(ctx *gin.Context) {
 	var body dto.CreateUserDTO
 	if err := ctx.ShouldBindJSON(&body); err != nil {
@@ -32,7 +38,12 @@ func (h *UserHandler) Create(ctx *gin.Context) {
 	utils.ResponseSuccessHandler(ctx, user)
 }
 
-// GetAll хэндлер для получения пользователей (entities.User)
+// GetAll
+//
+//	@Tags		user
+//
+//	@Success	200	{array}	[]entities.User
+//	@Router		/users [get]
 func (h *UserHandler) GetAll(ctx *gin.Context) {
 	chatID := ctx.Query("chat_id")
 	if len(chatID) != 0 {
@@ -69,7 +80,12 @@ func (h *UserHandler) GetAll(ctx *gin.Context) {
 	utils.ResponseSuccessHandler(ctx, users)
 }
 
-// GetByID хэндлер для получения пользователя по id (entities.User)
+// GetByID
+//
+//	@Tags		user
+//
+//	@Success	200	{array}	entities.User
+//	@Router		/users/:id [get]
 func (h *UserHandler) GetByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -82,7 +98,13 @@ func (h *UserHandler) GetByID(ctx *gin.Context) {
 	utils.ResponseSuccessHandler(ctx, users)
 }
 
-// Update хэндлер для обновления пользователя по id (entities.User)
+// Update
+//
+//	@Tags		user
+//	@Param		user	body	dto.UpdateUserDTO	true	"field"
+//
+//	@Success	200		{array}	entities.User
+//	@Router		/users/:id [put]
 func (h *UserHandler) Update(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -102,7 +124,12 @@ func (h *UserHandler) Update(ctx *gin.Context) {
 	utils.ResponseSuccessHandler(ctx, user)
 }
 
-// Delete хэндлер для удаления пользователя по id (entities.User)
+// Delete
+//
+//	@Tags		user
+//
+//	@Success	200
+//	@Router		/users/:id [delete]
 func (h *UserHandler) Delete(ctx *gin.Context) {
 	id := ctx.Param("id")
 

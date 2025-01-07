@@ -5,10 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/penglongli/gin-metrics/ginmetrics"
 	uuid "github.com/satori/go.uuid"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 	"net/http"
 	"time"
+	_ "vendetta/docs"
 	"vendetta/internal/app/config"
 	"vendetta/internal/app/initializers"
 	"vendetta/internal/domain/store"
@@ -61,14 +62,60 @@ func (s *Server) configureRouter() {
 
 	s.ar.Handle("GET", "/", HealthCheckHandler)
 
-
 	s.configureUserRouter()
+
+	s.configureRaceRouter()
+	s.configureRaceEffectRouter()
+
+	s.configureClassRouter()
+	s.configureClassEffectRouter()
+
+	s.configureHeroRouter()
+	s.configureHeroSpecRouter()
+
+	s.configureSkillRouter()
+
 	s.ar.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 func (s *Server) configureUserRouter() {
 	user := initializers.NewUserInitializer(s.c, s.l, s.ar, s.s)
 	user.Init()
+}
+
+func (s *Server) configureRaceRouter() {
+	race := initializers.NewRaceInitializer(s.c, s.l, s.ar, s.s)
+	race.Init()
+}
+
+func (s *Server) configureRaceEffectRouter() {
+	effect := initializers.NewRaceEffectInitializer(s.c, s.l, s.ar, s.s)
+	effect.Init()
+}
+
+func (s *Server) configureClassRouter() {
+	class := initializers.NewClassInitializer(s.c, s.l, s.ar, s.s)
+	class.Init()
+}
+
+func (s *Server) configureClassEffectRouter() {
+	effect := initializers.NewClassEffectInitializer(s.c, s.l, s.ar, s.s)
+	effect.Init()
+}
+
+func (s *Server) configureHeroRouter() {
+	hero := initializers.NewHeroInitializer(s.c, s.l, s.ar, s.s)
+	hero.Init()
+}
+
+func (s *Server) configureHeroSpecRouter() {
+	spec := initializers.NewHeroSpecInitializer(s.c, s.l, s.ar, s.s)
+	spec.Init()
+}
+
+func (s *Server) configureSkillRouter() {
+	skill := initializers.NewSkillInitializer(s.c, s.l, s.ar, s.s)
+	skill.Init()
 }
 
 func (s *Server) setRequestID() gin.HandlerFunc {
